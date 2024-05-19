@@ -1,18 +1,25 @@
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
+import { IoCart } from "react-icons/io5";
+import useCart from "../../hooks/useCart";
+import useAuth from "../../hooks/useAuth";
 
 const Navbar = () => {
 
-    const links = <>
-        <li><NavLink to={'/'}>Home</NavLink></li>
-        <li><NavLink to={'/menu'}>Menu</NavLink></li>
-        <li><NavLink to={'/shop'}>Shop</NavLink></li>
-        <li><NavLink to={'/dashboard'}>Dashboard</NavLink></li>
-        <li><NavLink to={'/contact'}>Contact</NavLink></li>
-    </>
+    const { logOut, user } = useAuth()
+    const [cart] = useCart()
+    const links =
+        <>
+            <li><NavLink to={'/'}>Home</NavLink></li>
+            <li><NavLink to={'/menu'}>Menu</NavLink></li>
+            <li><NavLink to={'/order/salad'}>Order</NavLink></li>
+            <li><NavLink to={'/dashboard'}>Dashboard</NavLink></li>
+            <li><NavLink to={'/contact'}>Contact</NavLink></li>
 
+        </>
+    console.log(cart);
     return (
         <>
-            <div className="navbar bg-opacity-20 max-w-screen-xl mx-auto px-5 bg-black fixed z-50 text-white">
+            <div className="navbar bg-opacity-90 max-w-screen-xl mx-auto px-5 bg-black z-50 text-white">
                 <div className="navbar-start">
                     <div className="dropdown">
                         <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -30,7 +37,23 @@ const Navbar = () => {
                     </ul>
                 </div>
                 <div className="navbar-end">
-                    <a className="btn">Button</a>
+                    {user ?
+                        <div className="flex justify-center items-center gap-3">
+                            <Link to={'/dashboard/cart'}>
+                                <button className="btn btn-ghost">
+                                    <IoCart className="text-3xl" />
+                                    <div className="badge">+{cart.length}</div>
+                                </button>
+                            </Link>
+                            <span>{user?.displayName}</span>
+                            <button onClick={logOut} className="btn">Logut</button>
+                        </div>
+                        :
+                        <div className="flex gap-5">
+                            <button><Link to={'/login'}>Login</Link></button>
+                            <button><Link to={'/signup'}>Signup</Link></button>
+                        </div>
+                    }
                 </div>
             </div>
         </>

@@ -10,19 +10,27 @@ import 'swiper/css';
 const Testimonials = () => {
 
     const [reviews, setReviews] = useState([])
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        fetch('ReviewsData.json')
+        fetch('http://localhost:5000/reviews')
             .then(res => res.json())
             .then(data => {
                 setReviews(data)
+                setLoading(false)
             })
     }, [])
 
     return (
         <div>
             <SectionHeading title={'Testimonials'} subtitle={'What Our Client Say'} />
-            <Swiper navigation={true} modules={[Navigation]} className="mySwiper">
+            {
+                loading ?
+                <div>
+                    <h1>Loading...</h1>
+                </div>
+                :
+                <Swiper navigation={true} modules={[Navigation]} className="mySwiper">
                 {
                     reviews.map(review => <SwiperSlide key={review._id}>
                         <div className="px-32 py-10 text-center">
@@ -38,6 +46,7 @@ const Testimonials = () => {
                     </SwiperSlide>)
                 }
             </Swiper>
+            }
         </div>
     );
 };
